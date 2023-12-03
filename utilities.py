@@ -194,10 +194,28 @@ def normalize_data(data):
     return (data - np.min(data)) / (np.max(data) - np.min(data))
 
 
-def grey_to_rgb_3d(images):
+def grey_to_rgb_3d(images, resize=None):
     result = []
     for i in images:
         if i.min() < 0:
             i = (normalize_data(i) * 255).astype(np.uint8)
+        if resize:
+            i = cv2.resize(i, dsize=resize, interpolation=cv2.INTER_CUBIC)
         result.append(cv2.cvtColor(i, cv2.COLOR_GRAY2RGB))
+    return np.array(result)
+
+
+def resize_3d(images, resize=None):
+    result = []
+    for i in images:
+        result.append(cv2.resize(i, dsize=resize, interpolation=cv2.INTER_CUBIC))
+    return np.array(result)
+
+
+def normalize_3d(images):
+    result = []
+    for i in images:
+        if i.min() < 0:
+            i = (normalize_data(i) * 255).astype(np.uint8)
+        result.append(i)
     return np.array(result)
